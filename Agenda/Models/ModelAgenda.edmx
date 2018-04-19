@@ -1,0 +1,665 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AgendaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AGENDA">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BILL">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="oknesset_url" Type="nvarchar(max)" />
+          <Property Name="committee_vote" Type="int" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ITEM2AGENDA">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="item" Type="bigint" Nullable="false" />
+          <Property Name="type" Type="int" Nullable="false" />
+          <Property Name="agenda" Type="int" Nullable="false" />
+          <Property Name="opinion" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="importance" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="lastUpdate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MK">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="mk_name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MK_SCORE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mk" Type="int" Nullable="false" />
+          <Property Name="score" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="volume" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="fromDate" Type="datetime" Nullable="false" />
+          <Property Name="toDate" Type="datetime" Nullable="false" />
+          <Property Name="agendaId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MK_TO_PARTY">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="mk" Type="int" Nullable="false" />
+          <Property Name="party" Type="int" Nullable="false" />
+          <Property Name="fromDate" Type="datetime" Nullable="false" />
+          <Property Name="toDate" Type="datetime" Nullable="false" />
+          <Property Name="knessetNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PARTY">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="party" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VOTE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="meeting" Type="datetime" Nullable="false" />
+          <Property Name="bill" Type="int" />
+          <Property Name="mk" Type="int" />
+          <Property Name="vote" Type="int" Nullable="false" />
+          <Property Name="source" Type="int" />
+        </EntityType>
+        <EntityType Name="VOTE_TO_AGENDA">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vote" Type="int" Nullable="false" />
+          <Property Name="agenda" Type="int" Nullable="false" />
+          <Property Name="score" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="volume" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ITEM2AGENDA">
+          <End Role="AGENDA" Type="Self.AGENDA" Multiplicity="1" />
+          <End Role="ITEM2AGENDA" Type="Self.ITEM2AGENDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AGENDA">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ITEM2AGENDA">
+              <PropertyRef Name="agenda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_SCORE_ToMK">
+          <End Role="MK" Type="Self.MK" Multiplicity="1" />
+          <End Role="MK_SCORE" Type="Self.MK_SCORE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MK">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_SCORE">
+              <PropertyRef Name="mk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_SCORE_ToTable">
+          <End Role="AGENDA" Type="Self.AGENDA" Multiplicity="1" />
+          <End Role="MK_SCORE" Type="Self.MK_SCORE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AGENDA">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_SCORE">
+              <PropertyRef Name="agendaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_TO_PARTY_ToMK">
+          <End Role="MK" Type="Self.MK" Multiplicity="1" />
+          <End Role="MK_TO_PARTY" Type="Self.MK_TO_PARTY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MK">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_TO_PARTY">
+              <PropertyRef Name="mk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_TO_PARTY_ToPARTY">
+          <End Role="PARTY" Type="Self.PARTY" Multiplicity="1" />
+          <End Role="MK_TO_PARTY" Type="Self.MK_TO_PARTY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PARTY">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_TO_PARTY">
+              <PropertyRef Name="party" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE_To_BILL">
+          <End Role="BILL" Type="Self.BILL" Multiplicity="0..1" />
+          <End Role="VOTE" Type="Self.VOTE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BILL">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE">
+              <PropertyRef Name="bill" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE_To_MK">
+          <End Role="MK" Type="Self.MK" Multiplicity="0..1" />
+          <End Role="VOTE" Type="Self.VOTE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MK">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE">
+              <PropertyRef Name="mk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE2AGENDA_To_agenda">
+          <End Role="AGENDA" Type="Self.AGENDA" Multiplicity="1" />
+          <End Role="VOTE_TO_AGENDA" Type="Self.VOTE_TO_AGENDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AGENDA">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE_TO_AGENDA">
+              <PropertyRef Name="agenda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE2AGENDA_To_VOTE">
+          <End Role="VOTE" Type="Self.VOTE" Multiplicity="1" />
+          <End Role="VOTE_TO_AGENDA" Type="Self.VOTE_TO_AGENDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VOTE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE_TO_AGENDA">
+              <PropertyRef Name="vote" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AgendaModelStoreContainer">
+          <EntitySet Name="AGENDA" EntityType="Self.AGENDA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BILL" EntityType="Self.BILL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ITEM2AGENDA" EntityType="Self.ITEM2AGENDA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MK" EntityType="Self.MK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MK_SCORE" EntityType="Self.MK_SCORE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MK_TO_PARTY" EntityType="Self.MK_TO_PARTY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PARTY" EntityType="Self.PARTY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Table" EntityType="Self.Table" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VOTE" EntityType="Self.VOTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VOTE_TO_AGENDA" EntityType="Self.VOTE_TO_AGENDA" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ITEM2AGENDA" Association="Self.FK_ITEM2AGENDA">
+            <End Role="AGENDA" EntitySet="AGENDA" />
+            <End Role="ITEM2AGENDA" EntitySet="ITEM2AGENDA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_SCORE_ToMK" Association="Self.FK_MK_SCORE_ToMK">
+            <End Role="MK" EntitySet="MK" />
+            <End Role="MK_SCORE" EntitySet="MK_SCORE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_SCORE_ToTable" Association="Self.FK_MK_SCORE_ToTable">
+            <End Role="AGENDA" EntitySet="AGENDA" />
+            <End Role="MK_SCORE" EntitySet="MK_SCORE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_TO_PARTY_ToMK" Association="Self.FK_MK_TO_PARTY_ToMK">
+            <End Role="MK" EntitySet="MK" />
+            <End Role="MK_TO_PARTY" EntitySet="MK_TO_PARTY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_TO_PARTY_ToPARTY" Association="Self.FK_MK_TO_PARTY_ToPARTY">
+            <End Role="PARTY" EntitySet="PARTY" />
+            <End Role="MK_TO_PARTY" EntitySet="MK_TO_PARTY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE_To_BILL" Association="Self.FK_VOTE_To_BILL">
+            <End Role="BILL" EntitySet="BILL" />
+            <End Role="VOTE" EntitySet="VOTE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE_To_MK" Association="Self.FK_VOTE_To_MK">
+            <End Role="MK" EntitySet="MK" />
+            <End Role="VOTE" EntitySet="VOTE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE2AGENDA_To_agenda" Association="Self.FK_VOTE2AGENDA_To_agenda">
+            <End Role="AGENDA" EntitySet="AGENDA" />
+            <End Role="VOTE_TO_AGENDA" EntitySet="VOTE_TO_AGENDA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE2AGENDA_To_VOTE" Association="Self.FK_VOTE2AGENDA_To_VOTE">
+            <End Role="VOTE" EntitySet="VOTE" />
+            <End Role="VOTE_TO_AGENDA" EntitySet="VOTE_TO_AGENDA" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AgendaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="AgendaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AGENDA" EntityType="AgendaModel.AGENDA" />
+          <EntitySet Name="MK" EntityType="AgendaModel.MK" />
+          <EntitySet Name="MK_SCORE" EntityType="AgendaModel.MK_SCORE" />
+          <EntitySet Name="MK_TO_PARTY" EntityType="AgendaModel.MK_TO_PARTY" />
+          <EntitySet Name="PARTY" EntityType="AgendaModel.PARTY" />
+          <AssociationSet Name="FK_MK_SCORE_ToMK" Association="AgendaModel.FK_MK_SCORE_ToMK">
+            <End Role="MK" EntitySet="MK" />
+            <End Role="MK_SCORE" EntitySet="MK_SCORE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_TO_PARTY_ToMK" Association="AgendaModel.FK_MK_TO_PARTY_ToMK">
+            <End Role="MK" EntitySet="MK" />
+            <End Role="MK_TO_PARTY" EntitySet="MK_TO_PARTY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_TO_PARTY_ToPARTY" Association="AgendaModel.FK_MK_TO_PARTY_ToPARTY">
+            <End Role="PARTY" EntitySet="PARTY" />
+            <End Role="MK_TO_PARTY" EntitySet="MK_TO_PARTY" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MK_SCORE_ToTable" Association="AgendaModel.FK_MK_SCORE_ToTable">
+            <End Role="AGENDA" EntitySet="AGENDA" />
+            <End Role="MK_SCORE" EntitySet="MK_SCORE" />
+          </AssociationSet>
+          <EntitySet Name="BILL" EntityType="AgendaModel.BILL" />
+          <EntitySet Name="VOTE" EntityType="AgendaModel.VOTE" />
+          <EntitySet Name="VOTE_TO_AGENDA" EntityType="AgendaModel.VOTE_TO_AGENDA" />
+          <AssociationSet Name="FK_VOTE2AGENDA_To_agenda" Association="AgendaModel.FK_VOTE2AGENDA_To_agenda">
+            <End Role="AGENDA" EntitySet="AGENDA" />
+            <End Role="VOTE_TO_AGENDA" EntitySet="VOTE_TO_AGENDA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE_To_BILL" Association="AgendaModel.FK_VOTE_To_BILL">
+            <End Role="BILL" EntitySet="BILL" />
+            <End Role="VOTE" EntitySet="VOTE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE_To_MK" Association="AgendaModel.FK_VOTE_To_MK">
+            <End Role="MK" EntitySet="MK" />
+            <End Role="VOTE" EntitySet="VOTE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VOTE2AGENDA_To_VOTE" Association="AgendaModel.FK_VOTE2AGENDA_To_VOTE">
+            <End Role="VOTE" EntitySet="VOTE" />
+            <End Role="VOTE_TO_AGENDA" EntitySet="VOTE_TO_AGENDA" />
+          </AssociationSet>
+          <EntitySet Name="ITEM2AGENDA" EntityType="AgendaModel.ITEM2AGENDA" />
+          <AssociationSet Name="FK_ITEM2AGENDA" Association="AgendaModel.FK_ITEM2AGENDA">
+            <End Role="AGENDA" EntitySet="AGENDA" />
+            <End Role="ITEM2AGENDA" EntitySet="ITEM2AGENDA" />
+          </AssociationSet>
+          <EntitySet Name="Table" EntityType="AgendaModel.Table" />
+        </EntityContainer>
+        <EntityType Name="AGENDA">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MK_SCORE" Relationship="AgendaModel.FK_MK_SCORE_ToTable" FromRole="AGENDA" ToRole="MK_SCORE" />
+          <NavigationProperty Name="VOTE_TO_AGENDA" Relationship="AgendaModel.FK_VOTE2AGENDA_To_agenda" FromRole="AGENDA" ToRole="VOTE_TO_AGENDA" />
+          <NavigationProperty Name="ITEM2AGENDA" Relationship="AgendaModel.FK_ITEM2AGENDA" FromRole="AGENDA" ToRole="ITEM2AGENDA" />
+        </EntityType>
+        <EntityType Name="MK">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="mk_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MK_SCORE" Relationship="AgendaModel.FK_MK_SCORE_ToMK" FromRole="MK" ToRole="MK_SCORE" />
+          <NavigationProperty Name="MK_TO_PARTY" Relationship="AgendaModel.FK_MK_TO_PARTY_ToMK" FromRole="MK" ToRole="MK_TO_PARTY" />
+          <NavigationProperty Name="VOTE" Relationship="AgendaModel.FK_VOTE_To_MK" FromRole="MK" ToRole="VOTE" />
+        </EntityType>
+        <EntityType Name="MK_SCORE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mk" Type="Int32" Nullable="false" />
+          <Property Name="score" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="volume" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="fromDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="toDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="agendaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MK1" Relationship="AgendaModel.FK_MK_SCORE_ToMK" FromRole="MK_SCORE" ToRole="MK" />
+          <NavigationProperty Name="AGENDA" Relationship="AgendaModel.FK_MK_SCORE_ToTable" FromRole="MK_SCORE" ToRole="AGENDA" />
+        </EntityType>
+        <EntityType Name="MK_TO_PARTY">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="mk" Type="Int32" Nullable="false" />
+          <Property Name="party" Type="Int32" Nullable="false" />
+          <Property Name="fromDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="toDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="knessetNumber" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MK1" Relationship="AgendaModel.FK_MK_TO_PARTY_ToMK" FromRole="MK_TO_PARTY" ToRole="MK" />
+          <NavigationProperty Name="PARTY1" Relationship="AgendaModel.FK_MK_TO_PARTY_ToPARTY" FromRole="MK_TO_PARTY" ToRole="PARTY" />
+        </EntityType>
+        <EntityType Name="PARTY">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="party1" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MK_TO_PARTY" Relationship="AgendaModel.FK_MK_TO_PARTY_ToPARTY" FromRole="PARTY" ToRole="MK_TO_PARTY" />
+        </EntityType>
+        <Association Name="FK_MK_SCORE_ToMK">
+          <End Type="AgendaModel.MK" Role="MK" Multiplicity="1" />
+          <End Type="AgendaModel.MK_SCORE" Role="MK_SCORE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MK">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_SCORE">
+              <PropertyRef Name="mk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_TO_PARTY_ToMK">
+          <End Type="AgendaModel.MK" Role="MK" Multiplicity="1" />
+          <End Type="AgendaModel.MK_TO_PARTY" Role="MK_TO_PARTY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MK">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_TO_PARTY">
+              <PropertyRef Name="mk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_TO_PARTY_ToPARTY">
+          <End Type="AgendaModel.PARTY" Role="PARTY" Multiplicity="1" />
+          <End Type="AgendaModel.MK_TO_PARTY" Role="MK_TO_PARTY" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PARTY">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_TO_PARTY">
+              <PropertyRef Name="party" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MK_SCORE_ToTable">
+          <End Type="AgendaModel.AGENDA" Role="AGENDA" Multiplicity="1" />
+          <End Type="AgendaModel.MK_SCORE" Role="MK_SCORE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AGENDA">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MK_SCORE">
+              <PropertyRef Name="agendaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BILL">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="oknesset_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="VOTE" Relationship="AgendaModel.FK_VOTE_To_BILL" FromRole="BILL" ToRole="VOTE" />
+          <Property Name="committee_vote" Type="Int32" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="VOTE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="meeting" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bill" Type="Int32" />
+          <Property Name="mk" Type="Int32" />
+          <Property Name="vote1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BILL1" Relationship="AgendaModel.FK_VOTE_To_BILL" FromRole="VOTE" ToRole="BILL" />
+          <NavigationProperty Name="MK1" Relationship="AgendaModel.FK_VOTE_To_MK" FromRole="VOTE" ToRole="MK" />
+          <NavigationProperty Name="VOTE_TO_AGENDA" Relationship="AgendaModel.FK_VOTE2AGENDA_To_VOTE" FromRole="VOTE" ToRole="VOTE_TO_AGENDA" />
+          <Property Name="source" Type="Int32" />
+        </EntityType>
+        <EntityType Name="VOTE_TO_AGENDA">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vote" Type="Int32" Nullable="false" />
+          <Property Name="agenda" Type="Int32" Nullable="false" />
+          <Property Name="score" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="volume" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <NavigationProperty Name="AGENDA1" Relationship="AgendaModel.FK_VOTE2AGENDA_To_agenda" FromRole="VOTE_TO_AGENDA" ToRole="AGENDA" />
+          <NavigationProperty Name="VOTE1" Relationship="AgendaModel.FK_VOTE2AGENDA_To_VOTE" FromRole="VOTE_TO_AGENDA" ToRole="VOTE" />
+        </EntityType>
+        <Association Name="FK_VOTE2AGENDA_To_agenda">
+          <End Type="AgendaModel.AGENDA" Role="AGENDA" Multiplicity="1" />
+          <End Type="AgendaModel.VOTE_TO_AGENDA" Role="VOTE_TO_AGENDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AGENDA">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE_TO_AGENDA">
+              <PropertyRef Name="agenda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE_To_BILL">
+          <End Type="AgendaModel.BILL" Role="BILL" Multiplicity="0..1" />
+          <End Type="AgendaModel.VOTE" Role="VOTE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BILL">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE">
+              <PropertyRef Name="bill" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE_To_MK">
+          <End Type="AgendaModel.MK" Role="MK" Multiplicity="0..1" />
+          <End Type="AgendaModel.VOTE" Role="VOTE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MK">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE">
+              <PropertyRef Name="mk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VOTE2AGENDA_To_VOTE">
+          <End Type="AgendaModel.VOTE" Role="VOTE" Multiplicity="1" />
+          <End Type="AgendaModel.VOTE_TO_AGENDA" Role="VOTE_TO_AGENDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VOTE">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VOTE_TO_AGENDA">
+              <PropertyRef Name="vote" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ITEM2AGENDA">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="item" Type="Int64" Nullable="false" />
+          <Property Name="type" Type="Int32" Nullable="false" />
+          <Property Name="agenda" Type="Int32" Nullable="false" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="lastUpdate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="opinion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="importance" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
+        <Association Name="FK_ITEM2AGENDA">
+          <End Type="AgendaModel.AGENDA" Role="AGENDA" Multiplicity="1" />
+          <End Type="AgendaModel.ITEM2AGENDA" Role="ITEM2AGENDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AGENDA">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ITEM2AGENDA">
+              <PropertyRef Name="agenda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AgendaModelStoreContainer" CdmEntityContainer="AgendaEntities">
+          <EntitySetMapping Name="AGENDA">
+            <EntityTypeMapping TypeName="AgendaModel.AGENDA">
+              <MappingFragment StoreEntitySet="AGENDA">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MK">
+            <EntityTypeMapping TypeName="AgendaModel.MK">
+              <MappingFragment StoreEntitySet="MK">
+                <ScalarProperty Name="mk_name" ColumnName="mk_name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MK_SCORE">
+            <EntityTypeMapping TypeName="AgendaModel.MK_SCORE">
+              <MappingFragment StoreEntitySet="MK_SCORE">
+                <ScalarProperty Name="agendaId" ColumnName="agendaId" />
+                <ScalarProperty Name="toDate" ColumnName="toDate" />
+                <ScalarProperty Name="fromDate" ColumnName="fromDate" />
+                <ScalarProperty Name="volume" ColumnName="volume" />
+                <ScalarProperty Name="score" ColumnName="score" />
+                <ScalarProperty Name="mk" ColumnName="mk" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MK_TO_PARTY">
+            <EntityTypeMapping TypeName="AgendaModel.MK_TO_PARTY">
+              <MappingFragment StoreEntitySet="MK_TO_PARTY">
+                <ScalarProperty Name="knessetNumber" ColumnName="knessetNumber" />
+                <ScalarProperty Name="toDate" ColumnName="toDate" />
+                <ScalarProperty Name="fromDate" ColumnName="fromDate" />
+                <ScalarProperty Name="party" ColumnName="party" />
+                <ScalarProperty Name="mk" ColumnName="mk" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PARTY">
+            <EntityTypeMapping TypeName="AgendaModel.PARTY">
+              <MappingFragment StoreEntitySet="PARTY">
+                <ScalarProperty Name="party1" ColumnName="party" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BILL">
+            <EntityTypeMapping TypeName="AgendaModel.BILL">
+              <MappingFragment StoreEntitySet="BILL">
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="committee_vote" ColumnName="committee_vote" />
+                <ScalarProperty Name="oknesset_url" ColumnName="oknesset_url" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VOTE">
+            <EntityTypeMapping TypeName="AgendaModel.VOTE">
+              <MappingFragment StoreEntitySet="VOTE">
+                <ScalarProperty Name="source" ColumnName="source" />
+                <ScalarProperty Name="vote1" ColumnName="vote" />
+                <ScalarProperty Name="mk" ColumnName="mk" />
+                <ScalarProperty Name="bill" ColumnName="bill" />
+                <ScalarProperty Name="meeting" ColumnName="meeting" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VOTE_TO_AGENDA">
+            <EntityTypeMapping TypeName="AgendaModel.VOTE_TO_AGENDA">
+              <MappingFragment StoreEntitySet="VOTE_TO_AGENDA">
+                <ScalarProperty Name="volume" ColumnName="volume" />
+                <ScalarProperty Name="score" ColumnName="score" />
+                <ScalarProperty Name="agenda" ColumnName="agenda" />
+                <ScalarProperty Name="vote" ColumnName="vote" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITEM2AGENDA">
+            <EntityTypeMapping TypeName="AgendaModel.ITEM2AGENDA">
+              <MappingFragment StoreEntitySet="ITEM2AGENDA">
+                <ScalarProperty Name="importance" ColumnName="importance" />
+                <ScalarProperty Name="opinion" ColumnName="opinion" />
+                <ScalarProperty Name="lastUpdate" ColumnName="lastUpdate" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="agenda" ColumnName="agenda" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="item" ColumnName="item" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Table">
+            <EntityTypeMapping TypeName="AgendaModel.Table">
+              <MappingFragment StoreEntitySet="Table">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

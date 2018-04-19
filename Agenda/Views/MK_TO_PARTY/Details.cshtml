@@ -1,0 +1,58 @@
+﻿@model Agenda.Models.MK_TO_PARTY
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MK_TO_PARTY</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.fromDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fromDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.toDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.toDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.knessetNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.knessetNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MK1.mk_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MK1.mk_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PARTY1.party1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PARTY1.party1)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,247 @@
+﻿@{
+    ViewBag.Title = "Bar Chart";
+    var choices = new List<SelectListItem>(){
+        new SelectListItem(){Text= "C#", Value="c#", Selected=true },
+        new SelectListItem(){Text= ".Net", Value=".net" },
+        new SelectListItem(){Text= "ASP.Net", Value="asp.net" },
+        new SelectListItem(){Text= "ASP.Net MVC", Value="asp.net-mvc" },
+        new SelectListItem(){Text= "C", Value="c" },
+        new SelectListItem(){Text= "C++", Value="c++" },
+        new SelectListItem(){Text= "JavaScript", Value="javascript" },
+        new SelectListItem(){Text= "Objective C", Value="objective-c" },
+        new SelectListItem(){Text= "PHP", Value="php" },
+        new SelectListItem(){Text= "Ruby", Value="ruby" },
+        new SelectListItem(){Text= "Python", Value="python" }
+    };
+}
+<style type="text/css">
+    svg g.axis {
+        font-size: .75em;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+        svg g.axis text.label {
+            font-size: 2em;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        svg g.axis path,
+        svg g.axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        
+
+.bar.positive {
+  fill: steelblue;
+}
+
+.bar.negative {
+  fill: brown;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+
+.chart rect {
+  fill: steelblue;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+
+
+
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+<form id="form1" runat="server">
+    <div id="chart"></div>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+    @*@Scripts.Render("~/Scripts/d3/d3.js")*@
+    @section Scripts{
+        <script type="text/javascript">
+            //    $(document).ready(function () {
+            //        $("#TagChoice").on("change", function () {
+            //    $.getJSON("/api/MK_SCORE_PARTY/88", function (data) {
+            //        buildVisualization(data);
+            //    });
+            //});
+
+
+            //$("#TagChoice").change();
+            //    });
+
+
+            ////var margin = { top: 30, right: 10, bottom: 10, left: 10 },
+            ////    width = 960 - margin.left - margin.right,
+            ////    height = 500 - margin.top - margin.bottom;
+
+            ////var x = d3.scale.linear()
+            ////    .range([0, width]);
+
+            ////var y = d3.scale.ordinal()
+            ////    .rangeRoundBands([0, height], .2);
+
+            ////var xAxis = d3.svg.axis()
+            ////    .scale(x)
+            ////    .orient("top");
+
+            ////var yAxis = d3.svg.axis()
+            ////    .scale(y)
+            ////    .orient("left")
+
+            ////var svg = d3.select("body").append("svg")
+            ////    .attr("width", width + margin.left + margin.right)
+            ////    .attr("height", height + margin.top + margin.bottom)
+            ////  .append("g")
+            ////    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            //////http://romantin-001-site1.myasp.net/api/MK_SCORE_PARTY/88
+            ////$.getJSON("/api/MK_SCORE_PARTY/128/", function (data) {
+            ////    x.domain(d3.extent(data, function (d) { return d.score; })).nice();
+            ////    y.domain(data.map(function (d) { return d.mkName; }));
+
+            ////    svg.selectAll(".bar")
+            ////        .data(data)
+            ////      .enter().append("rect")
+            ////        .attr("class", function (d) { return d.score < 0 ? "bar negative" : "bar positive"; })
+            ////        .attr("x", function (d) { return x(Math.min(0, d.score)); })
+            ////        .attr("y", function (d) { return y(d.mkName); })
+            ////        .attr("width", function (d) { return Math.abs(x(d.score) - x(0)); })
+            ////        .attr("height", y.rangeBand());
+
+            ////    svg.append("g")
+            ////        .attr("class", "x axis")
+            ////        .call(xAxis);
+
+            ////    svg.append("g")
+            ////        .attr("class", "y axis")
+            ////      .append("line")
+            ////        .attr("x1", x(0))
+            ////        .attr("x2", x(0))
+            ////        .attr("y2", height);
+            ////});
+
+            ////function type(d) {
+            ////    d.score = +d.score;
+            ////    return d;
+            ////}
+            $(function () {
+                var SALARY = [];
+
+                $.getJSON('/api/MK_SCORE_PARTY/128/', function (data) {
+                    $.each(data.score, function (i, f) {
+                        var tblRow = "<tr>" + "<td>" + f.volume + "</td>" +
+              "<td>" + f.score(PM) + "</td>" + "</tr>"
+                        $(tblRow).appendTo("#Salary tbody");
+                    });
+                });
+            });
+
+            function renderChart() {
+
+                //  var width = 1020,
+                //      height = 720,
+                var data = d3.json.parse(d3.select('#json').text());
+                var valueLabelWidth = 40; // space reserved for value labels (right)
+                var barHeight = 20; // height of one bar
+                var barLabelWidth = 100; // space reserved for bar labels
+                var barLabelPadding = 5; // padding between bar and bar labels (left)
+                var gridLabelHeight = 18; // space reserved for gridline labels
+                var gridChartOffset = 3; // space between start of grid and first bar
+                var maxBarWidth = 420; // width of the bar with the max value
+
+                // Accessor functions
+                var barLabel = function (d) { return d['volume']; };
+                var barValue = function (d) { return parseFloat(d['score(PM)']); };
+
+                // Scales
+                var yScale = d3.scale.ordinal().domain(d3.range(0, data.length)).rangeBands([0, data.length * barHeight]);
+                var y = function (d, i) { return yScale(i); };
+                var yText = function (d, i) { return y(d, i) + yScale.rangeBand() / 2; };
+                var x = d3.scale.linear().domain([0, d3.max(data, barValue)]).range([0, maxBarWidth]);
+
+                // Svg container element
+                var chart = d3.select('#chart').append("svg")
+               .attr('width', maxBarWidth + barLabelWidth + valueLabelWidth)
+               .attr('height', gridLabelHeight + gridChartOffset + data.length * barHeight);
+
+                // Grid line labels
+                var gridContainer = chart.append('g')
+                .attr('transform', 'translate(' + barLabelWidth + ',' + gridLabelHeight + ')');
+                gridContainer.selectAll("text").data(x.ticks(10)).enter().append("text")
+               .attr("x", x)
+               .attr("dy", -3)
+               .attr("text-anchor", "middle")
+               .text(String);
+
+                // Vertical grid lines
+                gridContainer.selectAll("line").data(x.ticks(10)).enter().append("line")
+               .attr("x1", x)
+               .attr("x2", x)
+               .attr("y1", 0)
+               .attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
+               .style("stroke", "#ccc");
+
+                // Bar labels
+                var labelsContainer = chart.append('g')
+               .attr('transform', 'translate(' + (barLabelWidth - barLabelPadding) + ',' + (gridLabelHeight + gridChartOffset) + ')');
+                labelsContainer.selectAll('text').data(data).enter().append('text')
+               .attr('y', yText)
+               .attr('stroke', 'none')
+               .attr('fill', 'black')
+               .attr("dy", ".35em")
+
+                // Vertical-align: middle
+               .attr('text-anchor', 'end')
+               .text(barLabel);
+
+                // Bars
+                var barsContainer = chart.append('g')
+                .attr('transform', 'translate(' + barLabelWidth + ',' + (gridLabelHeight + gridChartOffset) + ')');
+                barsContainer.selectAll("rect").data(data).enter().append("rect")
+               .attr('y', y)
+               .attr('height', yScale.rangeBand())
+               .attr('width', function (d) { return x(barValue(d)); })
+               .attr('stroke', 'Gray')
+               .attr('fill', 'YellowGreen');
+
+                // Bar value labels
+                barsContainer.selectAll("text").data(data).enter().append("text")
+               .attr("x", function (d) { return x(barValue(d)); })
+               .attr("y", yText)
+               .attr("dx", 3)
+               .attr("dy", ".35em")
+               .attr("text-anchor", "start")
+               .attr("fill", "black")
+               .attr("stroke", "none")
+               .text(function (d) { return d3.round(barValue(d), 2); });
+
+                // Start line
+                barsContainer.append("line")
+               .attr("y1", -gridChartOffset)
+               .attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
+               .style("stroke", "#000");
+
+            }
+        </script>
+    }

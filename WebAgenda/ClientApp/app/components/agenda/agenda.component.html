@@ -1,0 +1,62 @@
+﻿
+<h2>אג'נדות משויכות</h2>
+<p>
+    <!--@Html.ActionLink("Create New", "Create")-->
+</p>
+
+<p>
+    <!--Title: @Html.TextBox("SearchString") <br />-->
+</p>
+
+<form  #myForm="ngForm" ng-model="item2Agenda"
+        (ngSubmit)="onSubmit(myForm)"   >
+
+    <div class="form-group">
+        <label>אג'נדה</label>
+        <select name="agenda" [(ngModel)]="item2Agenda.agenda" >
+            <option *ngFor="let a of agendaList" [ngValue]="a.Id">{{a.name}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>שלב הצבעת החוק</label>
+        <select name="item" [(ngModel)]="item2Agenda.item">
+            <option *ngFor="let l of lawBillList" [ngValue]="l.id">{{l.sess_item_dscr}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>עמדה</label>
+        <select id="opinion" name="opinion" [(ngModel)]="item2Agenda.opinion" >
+            <option value="" selected="selected">לא נבחר/ה</option>
+            <option value="-1">התנגדות מלאה</option>
+            <option value="-0.5">התנגדות חלקית</option>
+            <option value="0.0">לא ניתן לקבוע</option>
+            <option value="0.5">תמיכה חלקית</option>
+            <option value="1">תמיכה מלאה</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>חשיבות</label>
+        <select id="importance" name="importance" [(ngModel)]="item2Agenda.importance" >
+            <option value="" selected="selected">לא נבחר/ה</option>
+            <option value="0">חשיבות נמוכה</option>
+            <option value="0.3">חשיבות בינונית</option>
+            <option value="0.6">חשיבות רבה</option>
+            <option value="1">חשיבות רבה מאוד</option>
+        </select>
+    </div>
+        <div class="form-group">
+            <label>הסבר</label>
+            <input id="description" type="text"
+                   class="form-control"
+                   [(ngModel)]="item2Agenda.description" name="description" #description="ngModel" required>
+        </div>
+        <div>
+            <div [hidden]="description.valid || description.pristine"
+                 class="alert alert-danger">
+                description is required
+            </div>
+        </div>
+        <button type="submit" class="ui button">עדכן</button>
+        <button type="button" class="ui button" (click)="onDelete(myForm)" >מחק</button>
+</form>
+

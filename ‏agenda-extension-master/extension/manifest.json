@@ -1,0 +1,18 @@
+{
+   "name": "View and edit agenda detail for this law",
+   "browser_action": {
+      "default_icon": "img/Presentation_icon-128.png",
+      "default_title": "Query String Values",
+      "default_popup": "popup.html"
+   },
+   "description": "View and edit agenda detail for this law by the query string parameter - lawitemid .",
+   "icons": {
+      "16": "img/Presentation_icon-16.png",
+      "38": "img/Presentation_icon-38.png",
+      "128": "img/Presentation_icon-128.png"
+   },
+   "options_page": "options.html",
+   "permissions": ["tabs"],
+   "version": "0.0.1",
+   "manifest_version": 2
+}
